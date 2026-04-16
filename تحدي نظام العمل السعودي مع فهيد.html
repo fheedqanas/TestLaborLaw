@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html dir="rtl" lang="ar">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>إختبار نظام العمل السعودي</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: linear-gradient(145deg, #1e2a3a 0%, #0f1724 100%);
+            font-family: 'Segoe UI', 'Tahoma', system-ui, -apple-system, sans-serif;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 2rem 1.5rem;
+        }
+
+        .quiz-card {
+            max-width: 750px;
+            width: 100%;
+            background: #ffffff;
+            border-radius: 2rem;
+            box-shadow: 0 25px 45px -12px rgba(0, 0, 0, 0.5);
+            overflow: hidden;
+            transition: all 0.2s ease;
+        }
+
+        .quiz-hero {
+            background: #0f2b3d;
+            padding: 1.8rem 1.5rem;
+            text-align: center;
+            border-bottom: 4px solid #facc15;
+        }
+
+        .hero-emoji {
+            font-size: 3.8rem;
+            display: block;
+            margin-bottom: 0.5rem;
+        }
+
+        .quiz-hero h1 {
+            font-size: 1.9rem;
+            color: white;
+            letter-spacing: -0.5px;
+            font-weight: 800;
+            margin-bottom: 0.4rem;
+        }
+
+        .subhead {
+            color: #cbd5e6;
+            font-size: 0.9rem;
+            font-weight: 500;
+        }
+
+        .score-board {
+            background: #f8fafc;
+            padding: 0.9rem 1.8rem;
+            display: flex;
+            justify-content: space-between;
+            font-weight: 700;
+            font-size: 1rem;
+            border-bottom: 1px solid #e2edf2;
+            color: #1e4a6b;
+            letter-spacing: 0.3px;
+        }
+
+        .question-area {
+            padding: 2rem 1.8rem 2rem 1.8rem;
+        }
+
+        .question-text {
+            font-size: 1.65rem;
+            font-weight: 800;
+            line-height: 1.4;
+            color: #0b3b4f;
+            margin-bottom: 2rem;
+            border-right: 5px solid #facc15;
+            padding-right: 1.2rem;
+        }
+
+        .options-container {
+            display: flex;
+            flex-direction: column;
+            gap: 0.9rem;
+            margin: 1.8rem 0;
+        }
+
+        .option-btn {
+            background: #f1f5f9;
+            border: 1px solid #e0eaf1;
+            border-radius: 60px;
+            padding: 0.9rem 1.5rem;
+            font-size: 1rem;
+            font-weight: 500;
+            text-align: right;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-family: inherit;
+            color: #1e2f3e;
+            display: flex;
+            align-items: center;
+        }
+
+        .option-btn:hover {
+            background: #e6edf4;
+            transform: scale(1.01);
+            border-color: #facc15;
+        }
+
+        .selected-option {
+            background: #d9effa;
+            border-color: #0f5c8a;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+            font-weight: 600;
+        }
+
+        .next-button {
+            background: #0f2b3d;
+            width: 100%;
+            padding: 0.9rem;
+            font-size: 1.2rem;
+            font-weight: bold;
+            border: none;
+            border-radius: 60px;
+            color: white;
+            margin-top: 1rem;
+            cursor: pointer;
+            transition: background 0.2s;
+            font-family: inherit;
+        }
+
+        .next-button:hover {
+            background: #1f4a66;
+        }
+
+        .result-wrapper {
+            background: #fefce8;
+            text-align: center;
+            padding: 2rem;
+            margin: 1rem;
+            border-radius: 2rem;
+            box-shadow: inset 0 1px 3px #0001, 0 8px 20px rgba(0,0,0,0.1);
+        }
+
+        .final-score {
+            font-size: 4rem;
+            font-weight: 900;
+            color: #b45309;
+            margin: 0.5rem 0;
+        }
+
+        .restart-btn {
+            background: #b45309;
+            color: white;
+            border: none;
+            padding: 12px 28px;
+            border-radius: 40px;
+            font-weight: bold;
+            font-size: 1rem;
+            margin-top: 1rem;
+            cursor: pointer;
+        }
+
+        footer {
+            background: #f1f5f9;
+            text-align: center;
+            font-size: 0.7rem;
+            padding: 1rem;
+            color: #2c5a6e;
+            border-top: 1px solid #e2edf2;
+        }
+        @media (max-width: 550px) {
+            .quiz-card { border-radius: 1.5rem; }
+            .question-text { font-size: 1.3rem; }
+            .score-board { font-size: 0.85rem; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="quiz-card" id="quizRoot">
+    <div class="quiz-hero">
+        <span class="hero-emoji">⚖️</span>
+        <h1>تحدي نظام العمل السعودي مع فهيد</h1>
+        <div class="subhead">اختبار لمعلوماتك في نظام العمل؟</div>
+    </div>
+    <div id="dynamicContent"></div>
+    <footer>إخلاء مسؤولية: المعلومات في الإختبار قابلة للتغيير </footer>
+</div>
+
+<script>
+    // =============================================================
+    // الأسئلة العشرة مع الإجابات الصحيحة (بعد التصحيح)
+    // =============================================================
+    const QUESTIONS = [
+        { text: "تستحق العاملة على كل حال عند وفاة زوجها إجازة بأجر لمدة 4 أشهر و10 أيام", options: ["صح", "خطأ"], correct: 1 },   // خطأ
+        { text: "للعامل الحق في إجازة بنصف الأجر في حال وفاة", options: ["الزوجة", "العم", "الخال", "جميع الاجابات خاطئ"], correct: 3 },   // جميع الاجابات خاطئ
+        { text: "في حال إنتهاء عقد الموظف المقيم تتحول حالته مباشرةً الى منقطع عن العمل", options: ["صح", "خطأ"], correct: 1 },   // خطأ
+        { text: "في كل الأحوال لايمكن للموظف المقيم نقل كفالته إلا بموافقة صاحب العمل الحالي", options: ["صح", "خطأ"], correct: 1 },   // خطأ
+        { text: "رسوم تجديد رخص العمل ثابتة 9600 في السنة", options: ["صح", "خطأ"], correct: 1 },   // خطأ (تم التصحيح)
+        { text: "في حال كان المالك متفرغ للعمل ويوجد موظف سعودي كم عدد العمال المعفيين من المقابل المالي", options: ["1", "2", "4"], correct: 2 },   // 4 (تم التصحيح)
+        { text: "الحد الأقصى لحالات الإعفاء من المقابل المالي هي", options: ["4", "6", "8"], correct: 0 },   // 4 (تم التصحيح)
+        { text: "مدة الإشعار في الاتقالة للعقد غير محدد المدة هي 30 يوم", options: ["صح", "خطأ"], correct: 1 },   // خطأ (تم التصحيح)
+        { text: "يظل العقد ساري المعفول خلال فترة طلب الإستقالة", options: ["صح", "خطأ"], correct: 0 },   // صح
+        { text: "إجازة عيد الفطر مدتها 4 أيام وتبدأ من اليوم التالي ل 30 من شهر رمضان حسب تقومي ام القرى", options: ["صح", "خطأ"], correct: 1 }    // خطأ
+    ];
+
+    let currentIndex = 0;
+    let userAnswers = new Array(QUESTIONS.length).fill(null);
+    let quizCompleted = false;
+    const dynamicContainer = document.getElementById('dynamicContent');
+
+    function updateTopBar() {
+        let currentScore = 0;
+        for (let i = 0; i <= currentIndex; i++) {
+            if (userAnswers[i] !== null && userAnswers[i] === QUESTIONS[i].correct) currentScore++;
+        }
+        return currentScore;
+    }
+
+    function renderCurrentQuestion() {
+        if (quizCompleted) {
+            showFinalResult();
+            return;
+        }
+
+        const currentQ = QUESTIONS[currentIndex];
+        const currentScore = updateTopBar();
+
+        let html = `
+            <div class="score-board">
+                <span>السؤال ${currentIndex+1} / ${QUESTIONS.length}</span>
+                <span>النتيجة: ${currentScore}</span>
+            </div>
+            <div class="question-area">
+                <div class="question-text">${currentQ.text}</div>
+                <div class="options-container" id="optionsContainer"></div>
+                <button class="next-button" id="nextButton">${currentIndex === QUESTIONS.length-1 ? 'إنهاء الاختبار' : 'السؤال التالي'}</button>
+            </div>
+        `;
+
+        dynamicContainer.innerHTML = html;
+        const optsDiv = document.getElementById('optionsContainer');
+        
+        currentQ.options.forEach((opt, idx) => {
+            const btn = document.createElement('button');
+            btn.className = 'option-btn';
+            if (userAnswers[currentIndex] === idx) btn.classList.add('selected-option');
+            btn.innerText = `${String.fromCharCode(65+idx)}. ${opt}`;
+            btn.addEventListener('click', () => {
+                if (quizCompleted) return;
+                userAnswers[currentIndex] = idx;
+                renderCurrentQuestion();
+            });
+            optsDiv.appendChild(btn);
+        });
+
+        const nextBtn = document.getElementById('nextButton');
+        nextBtn.addEventListener('click', () => {
+            if (quizCompleted) return;
+            if (userAnswers[currentIndex] === null) {
+                alert('❌ الرجاء اختيار إجابة قبل الانتقال للسؤال التالي');
+                return;
+            }
+            if (currentIndex + 1 < QUESTIONS.length) {
+                currentIndex++;
+                renderCurrentQuestion();
+            } else {
+                quizCompleted = true;
+                showFinalResult();
+            }
+        });
+    }
+
+    function showFinalResult() {
+        let finalScore = 0;
+        for (let i = 0; i < QUESTIONS.length; i++) {
+            if (userAnswers[i] !== null && userAnswers[i] === QUESTIONS[i].correct) finalScore++;
+        }
+        const total = QUESTIONS.length;
+
+        dynamicContainer.innerHTML = `
+            <div class="score-board">
+                <span>الاختبار مكتمل ✅</span>
+                <span>النتيجة: ${finalScore}</span>
+            </div>
+            <div class="result-wrapper">
+                <span style="font-size:3rem;">⚖️📋</span>
+                <h2 style="margin-top:8px;">النتيجة النهائية</h2>
+                <div class="final-score">${finalScore} / ${total}</div>
+                <p style="margin:12px 0 0 0; font-weight:500;">نسبة الإجابات الصحيحة: ${Math.round((finalScore/total)*100)}%</p>
+                <button class="restart-btn" id="restartExam">إعادة الاختبار</button>
+            </div>
+        `;
+        document.getElementById('restartExam')?.addEventListener('click', () => location.reload());
+    }
+
+    renderCurrentQuestion();
+</script>
+</body>
+</html>
